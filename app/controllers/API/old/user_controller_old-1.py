@@ -1,7 +1,6 @@
 import email
 from flask import Blueprint, jsonify, request
 from sqlalchemy import table
-from app.models.siswa_model import SiswaModel
 from app.models.user_model import UserModel, UserDetailModel
 from app.models.base_model import BaseModel
 from app.lib.status_code import *
@@ -142,11 +141,9 @@ def insert_new_user():
             'error' : f'akun dengan email : {email} sudah ada.'
         }), HTTP_409_CONFLICT
     else:
-       
-        # user_group = user.table.group
-        if 'admin' in group:
-            user.insert_data()
-            user_id = user.table.ID
+        user.insert_data()
+        user_id = user.table.ID
+        if user_id is not None:
             # ========== Data Profil ==============
             # user_id = request.json.get('user_id')
             nama_depan = request.json.get('nama_depan')
@@ -175,29 +172,7 @@ def insert_new_user():
                 'alamat' : user_detail.table.alamat,
                 'telp' : user_detail.table.telp
             }), HTTP_201_CREATED
-        elif 'siswa' in group:
-            user.insert_data()
-            user_id = user.table.ID
-
-            nama_siswa = request.json.get('nama_siswa')
-            nisn = request.json.get('nisn')
-            jk = request.json.get('jenis_kelamin')
-            agama = request.json.get('agama')
-            alamat = request.json.get('alamat')
-
-            siswa = BaseModel(SiswaModel(user_id, nisn, nama_siswa, jk, agama))
-            siswa.insert_data()
-            return jsonify({
-                'ID' : user.table.ID,
-                'username' : user.table.username,
-                'email' : user.table.email,
-                'nama_siswa' : siswa.table.nama_siswa,
-                'nisn' : siswa.table.nisn,
-                'jk' : siswa.table.jenis_kelamin,
-            }), HTTP_201_CREATED
-
-
-
+    
 # =============== edit new user ===========
 @user.route('/update-user')
 def update_detail_user():
@@ -210,7 +185,5 @@ def update_detail_user():
     jenis_kelamin = request.json.get('jenis_kelamin')
     alamat = request.json.get('alamat')
     telp = request.json.get('telp')
-
-    
 
     

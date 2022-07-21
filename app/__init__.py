@@ -1,6 +1,7 @@
 from flask import Flask
 from settings import Config
 from app.registers_blueprint import register_app
+from app import register_model
 
 def create_app():
 
