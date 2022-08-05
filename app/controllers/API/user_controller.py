@@ -198,18 +198,55 @@ def insert_new_user():
 
 
 
-# =============== edit new user ===========
-@user.route('/update-user')
+# =============== edit user ===========
+@user.route('/update-user-detail', methods=['PUT','PATCH','POST'])
 def update_detail_user():
     username = request.json.get('username')
     group = request.json.get('group')
-    password = request.json.get('password')
     email = request.json.get('email')
     nama_depan = request.json.get('nama_depan')
     nama_belakang = request.json.get('nama_belakang')
     jenis_kelamin = request.json.get('jenis_kelamin')
     alamat = request.json.get('alamat')
     telp = request.json.get('telp')
+
+    users = BaseModel(UserModel)
+    ID = request.args.get('id')
+    user = users.filter_by(ID=ID)
+    
+    user.username = username
+    user.group = group
+    user.email = email
+
+    users.update_data()
+
+    user_details = BaseModel(UserDetailModel)
+    user_detail = user_details.filter_by(user_id=user.ID)
+
+    # Jika user detail tidak ada
+    # maka tambahkan data user detail
+    if user_detail is None:
+        add_user_detail = BaseModel(UserDetailModel(user.ID, nama_depan,
+                                                    nama_belakang, jenis_kelamin,
+                                                    alamat, telp))
+        add_user_detail.insert_data()
+    else:
+        user_detail.nama_depan = nama_depan
+        user_detail.nama_belakang = nama_belakang
+        user_detail.jenis_kelamin = jenis_kelamin
+        user_detail.alamat = alamat
+        user_detail.telp = telp
+
+        user_details.update_data()
+
+    return jsonify({
+        'username' : user.username,
+        'group' : user.group,
+        'email' : user.email,
+        'nama_lengkap' : user_detail.nama_depan + ' ' + user_detail.nama_belakang,
+    }), HTTP_201_CREATED
+
+    
 
     
 

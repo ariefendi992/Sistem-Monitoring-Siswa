@@ -36,7 +36,7 @@ class UserModel(db.Model):
 class UserDetailModel(db.Model):
     __tablename__ = 'tb_user_detail'
     user_detail_ID = Column(INTEGER(unsigned=True), primary_key=True, autoincrement=True)
-    user_id = Column(INTEGER(unsigned=True), ForeignKey('tb_user.ID'), nullable=False)
+    user_id = Column(INTEGER(unsigned=True), ForeignKey('tb_user.ID', ondelete='CASCADE', onupdate='CASCADE'), nullable=False)
     nama_depan = Column(VARCHAR(128), nullable=False)
     nama_belakang = Column(VARCHAR(128), nullable=False)
     jenis_kelamin = Column(VARCHAR(32), nullable=False)
