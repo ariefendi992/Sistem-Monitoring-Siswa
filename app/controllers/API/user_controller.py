@@ -1,10 +1,9 @@
-import email
 from flask import Blueprint, jsonify, request
-from sqlalchemy import table
 from app.models.siswa_model import SiswaModel
 from app.models.user_model import UserModel, UserDetailModel
 from app.models.base_model import BaseModel
 from app.lib.status_code import *
+from app.extensions import db
 
 user = Blueprint('user', __name__, url_prefix='/user')
 # 
@@ -247,7 +246,32 @@ def update_detail_user():
     }), HTTP_201_CREATED
 
     
+# fetch all User Detail
+@user.route('all-users', methods=['GET'])
+def fetch_all_user():
+    # query = db.session.query(UserModel).all()
+    users = BaseModel(UserModel)
+    query = users.select_join_all(UserDetailModel)
 
+    print(query)
+    list = []
+    for u1, u2 in query:
+        list.append({
+            'username' : u1.username,
+            'group' : u1.group,
+            'email' : u1.email,
+            'nama_depan' : u2.nama_depan if u2.nama_depan else None,
+            'nama_depan' : u2.nama_depan,
+            'nama_belakang' : u2.nama_belakang,
+            'jenis_kelamin' : u2.jenis_kelamin,
+            'alamat' : u2.alamat,
+            'telp' : u2.telp,
+            'profil_picture' : u2.profil_picture,
+        })
+
+    return jsonify({
+        'user_detail:' : list
+    }), HTTP_200_OK
     
 
     
