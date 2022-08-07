@@ -264,14 +264,3 @@ def fetch_all_user():
     return jsonify({
         'all_user' : list
     }), HTTP_200_OK
-
-
-# delete user
-# @user.delete('delete-user')
-# def delete_user():
-#     user = BaseModel(UserModel)
-#     user.delete_data()
-
-#     return jsonify({
-#         'msg' : 'User has been deleted'
-#     }), HTTP_200_OK
