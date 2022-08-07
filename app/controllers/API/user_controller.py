@@ -36,35 +36,6 @@ def register_user():
             'email' : users.table.email
         }),HTTP_201_CREATED
 
-# # 
-# # ------------- update user -----------------
-# @user.route('/update-user', methods=['PUT','PATCH'])
-# def update_user():
-#     if request.method == 'PUT' or request.method == 'PATCH':
-#         username = request.json.get('username')
-#         group = request.json.get('group')
-#         email = request.json.get('email')
-
-#         users = BaseModel(UserModel)
-#         ID = request.args.get('id')
-#         check_user = users.filter_by(ID=ID)
-#         print(check_user)
-
-#         check_user.username = username
-#         check_user.group = group
-#         check_user.email = email
-#         users.update_data()
-#         return jsonify({
-#             'id' : check_user.ID,
-#             'username' : check_user.username,
-#             'email' : check_user.email
-#         }), HTTP_201_CREATED
-
-#     else:
-#         return jsonify({
-#             'error' : 'Not Method Allowed'
-#         }), HTTP_405_METHOD_NOT_ALLOWED
-
 
 # 
 # ------------- check password user -----------------
@@ -113,7 +84,7 @@ def delete_user():
     check_user = users.filter_by(ID=ID)
     users.delete_data(check_user)
     return jsonify({
-        'msg' : 'delete data success.'
+        'msg' : 'User has been deleted'
     }), HTTP_200_OK
 
 # 
@@ -247,11 +218,11 @@ def update_detail_user():
 
     
 # fetch all User Detail
-@user.route('all-users', methods=['GET'])
-def fetch_all_user():
+@user.route('all-users-detail', methods=['GET'])
+def fetch_all_user_detail():
     # query = db.session.query(UserModel).all()
     users = BaseModel(UserModel)
-    query = users.select_join_all(UserDetailModel)
+    query = users.fetch_join_all(UserDetailModel)
 
     print(query)
     list = []
@@ -273,5 +244,34 @@ def fetch_all_user():
         'user_detail:' : list
     }), HTTP_200_OK
     
+# fetch all user
+@user.route('all-users', methods=['GET'])
+def fetch_all_user():
+    users = BaseModel(UserModel)
+    query = users.fetch_all()
 
-    
+    list = []
+    for u in query:
+        list.append({
+            'id' : u.ID,
+            'username' : u.username,
+            'group' : u.group,
+            'email' : u.email,
+            'last_login' : u.last_login,
+            'status_aktif' : 'aktif' if u.active == 1 else 'tidak aktif'
+        })
+
+    return jsonify({
+        'all_user' : list
+    }), HTTP_200_OK
+
+
+# delete user
+# @user.delete('delete-user')
+# def delete_user():
+#     user = BaseModel(UserModel)
+#     user.delete_data()
+
+#     return jsonify({
+#         'msg' : 'User has been deleted'
+#     }), HTTP_200_OK

@@ -16,13 +16,13 @@ class BaseModel:
         db.session.delete(*args)
         db.session.commit()
 
-    def select_all(self):
+    def fetch_all(self):
         return self.table.query.all()
 
     def filter_by(self, *args, **kwargs):
         return self.table.query.filter_by(*args, **kwargs).first()
 
-    def select_join_all(self, *args, **kwargs):
+    def fetch_join_all(self, *args, **kwargs):
         return db.session.query(self.table, *args, **kwargs).join(*args, **kwargs).all()
         # return self.table.query.join(*args, **kwargs).all()
 
