@@ -87,10 +87,7 @@ def insert_new_user():
                 'nisn' : siswa.table.nisn,
                 'jk' : siswa.table.jenis_kelamin,
             }), HTTP_201_CREATED
-
-
-
-
+            
 
 @auth.route('/login', methods=['GET','POST'])
 def login_user():
