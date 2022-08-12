@@ -2,6 +2,7 @@ from datetime import datetime
 from app.extensions import db
 from flask import Blueprint, jsonify, request
 from app.lib.status_code import *
+from app.lib.custome.time_zone import utc_makassar
 from app.models.base_model import BaseModel
 from app.models.user_model import UserDetailModel, UserModel
 from app.models.siswa_model import SiswaModel
@@ -88,9 +89,9 @@ def insert_new_user():
                 'jk' : siswa.table.jenis_kelamin,
             }), HTTP_201_CREATED
             
-
+# user login with flask jwt extended
 @auth.route('/login', methods=['GET','POST'])
-def login_user():
+def user_login():
     username = request.json.get('username')
     password = request.json.get('password')
     group = request.json.get('role')
@@ -136,3 +137,65 @@ def login_user():
     return jsonify({
         'msg' : 'Kesalahan pada autentikasi'
     }), HTTP_401_UNAUTHORIZED
+
+# user login without flask jwt extended
+@auth.post('user-login')
+def user_login2():
+    username = request.json.get('username')
+    password = request.json.get('password')
+
+    query = BaseModel(UserModel)
+    sql_user = query.filter_by(username=username)
+
+    if not sql_user:
+        return jsonify({
+            'msg' : 'Username tidak ditemukan.'
+        }), HTTP_401_UNAUTHORIZED
+
+    if sql_user:
+        check_password = UserModel.check_pw_hash(sql_user.password, password)
+
+        if not check_password:
+            return jsonify({
+                'msg' : 'Password salah.'
+            }), HTTP_401_UNAUTHORIZED
+        
+        else:
+            print(check_password)
+            if sql_user.group == 'admin':
+                query_user_detail = BaseModel(UserDetailModel)
+                sql_user_detail = query_user_detail.filter_by(user_id=sql_user.ID)
+
+                sql_user.last_login = utc_makassar()
+                query.update_data()
+
+                return jsonify({
+                    'id' : sql_user.ID,
+                    'username' : sql_user.username,
+                    'email' : sql_user.email,
+                    'nama_depan' : sql_user_detail.nama_depan,
+                    'nama_belakang' : sql_user_detail.nama_belakang,
+                    'jenis_kelamin' : sql_user_detail.jenis_kelamin,
+                    'alamat' : sql_user_detail.alamat,
+                    'telp' : sql_user_detail.telp
+                }), HTTP_200_OK
+
+            elif sql_user.group == 'siswa':
+                query_siswa = BaseModel(SiswaModel)
+                sql_siswa = query_siswa.filter_by(user_id=sql_user.ID)
+
+                sql_user.last_login = utc_makassar()
+                query.update_data()
+                
+                data = []
+                data.append({
+                    'id' : sql_user.ID,
+                    'username' : sql_user.username,
+                    'email' : sql_user.email,
+                    'group' : sql_user.group,
+                    'nama_siswa' : sql_siswa.nama_siswa
+                })
+
+                return jsonify({
+                    'data' : data
+                }), HTTP_200_OK
