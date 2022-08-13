@@ -6,7 +6,8 @@ class SiswaModel(db.Model):
     __tablename__ = 'tb_siswa_detail'
     siswa_ID = Column(INTEGER(unsigned=True), primary_key=True, autoincrement=True)
     user_id = Column(INTEGER(unsigned=True), ForeignKey('tb_user.ID'), nullable=False)
-    nama_siswa = Column(VARCHAR(64), nullable=False)
+    nama_depan = Column(VARCHAR(64), nullable=False)
+    nama_belakang = Column(VARCHAR(64), nullable=False)
     nisn = db.Column(db.String(32), nullable=False)
     tempat_lahir = db.Column(db.String(64), nullable=True)
     tanggal_lahir = db.Column(db.String(64), nullable=True)
@@ -16,6 +17,7 @@ class SiswaModel(db.Model):
     nama_ayah = db.Column(db.String(128), nullable=True)
     nama_ibu = db.Column(db.String(128), nullable=True)
     foto_siswa = db.Column(db.String(256), nullable=True)
+    kelas_id = db.Column(db.Integer, ForeignKey('tb_kelas.kelas_ID'), nullable=True)
 
 
     def __init__(self, user_id, nama_siswa, nisn, jk, agama) -> None:

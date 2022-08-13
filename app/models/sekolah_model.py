@@ -6,4 +6,7 @@ class KelasModel(db.Model):
     nama_kelas = db.Column(db.String(128), nullable=False)
     jml_siswa = db.Column(db.String(16), nullable=True)
 
-    
+class MapelModel(db.Model):
+    __tablename__ = 'tb_mapel'
+    mapel_ID = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    mapel = db.Column(db.String(128), nullable=False)

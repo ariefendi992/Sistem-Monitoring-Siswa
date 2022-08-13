@@ -173,6 +173,7 @@ def user_login2():
                     'id' : sql_user.ID,
                     'username' : sql_user.username,
                     'email' : sql_user.email,
+                    'group' : sql_user.group,
                     'nama_depan' : sql_user_detail.nama_depan,
                     'nama_belakang' : sql_user_detail.nama_belakang,
                     'jenis_kelamin' : sql_user_detail.jenis_kelamin,
