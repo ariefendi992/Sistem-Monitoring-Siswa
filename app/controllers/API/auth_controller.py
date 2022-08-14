@@ -4,6 +4,7 @@ from flask import Blueprint, jsonify, request
 from app.lib.status_code import *
 from app.lib.custome.time_zone import utc_makassar
 from app.models.base_model import BaseModel
+from ...models.guru_model import GuruModel
 from app.models.user_model import UserDetailModel, UserModel
 from app.models.siswa_model import SiswaModel
 from flask_jwt_extended import create_access_token, create_refresh_token, jwt_required, get_jwt_identity
@@ -13,7 +14,7 @@ auth = Blueprint('auth', __name__, url_prefix='/auth')
 
 # ------------- user new user details ----------
 # ------------- add new user -------
-@auth.post('register-new-user')
+@auth.post('/register-new-user')
 def insert_new_user():
     # ========== Data Akun ==============
     username = request.json.get('username')
@@ -68,78 +69,104 @@ def insert_new_user():
                 'alamat' : user_detail.table.alamat,
                 'telp' : user_detail.table.telp
             }), HTTP_201_CREATED
+            
         elif 'siswa' in group:
             user.insert_data()
             user_id = user.table.ID
 
-            nama_siswa = request.json.get('nama_siswa')
+            nama_depan = request.json.get('nama_depan')
+            nama_belakang = request.json.get('nama_belakang')
             nisn = request.json.get('nisn')
             jk = request.json.get('jenis_kelamin')
             agama = request.json.get('agama')
             alamat = request.json.get('alamat')
 
-            siswa = BaseModel(SiswaModel(user_id, nisn, nama_siswa, jk, agama))
+            siswa = BaseModel(SiswaModel(user_id, nisn, nama_depan, nama_belakang, jk, agama))
             siswa.insert_data()
             return jsonify({
                 'ID' : user.table.ID,
                 'username' : user.table.username,
                 'email' : user.table.email,
-                'nama_siswa' : siswa.table.nama_siswa,
+                'nama_depan' : siswa.table.nama_depan,
+                'nama_belakang' : siswa.table.nama_belakang,
                 'nisn' : siswa.table.nisn,
                 'jk' : siswa.table.jenis_kelamin,
             }), HTTP_201_CREATED
             
-# user login with flask jwt extended
-@auth.route('/login', methods=['GET','POST'])
-def user_login():
-    username = request.json.get('username')
-    password = request.json.get('password')
-    group = request.json.get('role')
-
-    user = BaseModel(UserModel)
-    sql_user = user.filter_by(username=username)
-
-    if not sql_user:
-        return jsonify({
-            'msg' : 'Username belum terdaftar'
-        }), HTTP_401_UNAUTHORIZED
-
-    if sql_user:
-        is_pass_correct = UserModel.check_pw_hash(sql_user.password, password)
-        
-        if not is_pass_correct:
-            return jsonify({
-                'msg' : 'Password salah!, silahkan periksa kembali'
-            }), HTTP_401_UNAUTHORIZED
-
-        elif is_pass_correct:
-            generate_token = {
-                'id' : sql_user.ID,
-                'username' : sql_user.username,
-                'group' : sql_user.group
-            }
-
-            expire_token = datetime.timedelta(minutes=60)
-            expire_refresh_token = datetime.timedelta(days=30)
+        elif 'guru':
+            user.insert_data()
+            user_id = user.table.ID
+            nip = request.json.get('nip')
+            nama_depan = request.json.get('nama_depan')
+            nama_belakang = request.json.get('nama_belakang')
+            jenis_kelamin = request.json.get('jenis_kelamin')
+            alamat = request.json.get('alamat')
+            agama = request.json.get('agama')
             
-            access = create_access_token(generate_token, fresh=True, expires_delta=expire_token)
-            refresh = create_refresh_token(generate_token, expires_delta=expire_refresh_token)
-
+            query_guru = BaseModel(GuruModel(user_id, nip, nama_depan, nama_belakang, jenis_kelamin,
+                                        alamat, agama))
+            query_guru.insert_data()
+            
             return jsonify({
-                'id' : sql_user.ID,
-                'username' : sql_user.username,
-                'group' : sql_user.group,
-                'token' : access,
-                'refresh' : refresh,
-                'expire' : str(expire_token)
-            }), HTTP_200_OK
+                'ID' : user.table.ID,
+                'username' : user.table.username,
+                'email' : user.table.email,
+                'nama' : query_guru.table.nama_depan + ' ' +   query_guru.table.nama_belakang,
+                'nip' : query_guru.table.nip
+            }), HTTP_201_CREATED
+        
+        
+# user login with flask jwt extended
+# @auth.route('/login', methods=['GET','POST'])
+# def user_login():
+#     username = request.json.get('username')
+#     password = request.json.get('password')
+#     group = request.json.get('role')
 
-    return jsonify({
-        'msg' : 'Kesalahan pada autentikasi'
-    }), HTTP_401_UNAUTHORIZED
+#     user = BaseModel(UserModel)
+#     sql_user = user.filter_by(username=username)
+
+#     if not sql_user:
+#         return jsonify({
+#             'msg' : 'Username belum terdaftar'
+#         }), HTTP_401_UNAUTHORIZED
+
+#     if sql_user:
+#         is_pass_correct = UserModel.check_pw_hash(sql_user.password, password)
+        
+#         if not is_pass_correct:
+#             return jsonify({
+#                 'msg' : 'Password salah!, silahkan periksa kembali'
+#             }), HTTP_401_UNAUTHORIZED
+
+#         elif is_pass_correct:
+#             generate_token = {
+#                 'id' : sql_user.ID,
+#                 'username' : sql_user.username,
+#                 'group' : sql_user.group
+#             }
+
+#             expire_token = datetime.timedelta(minutes=60)
+#             expire_refresh_token = datetime.timedelta(days=30)
+            
+#             access = create_access_token(generate_token, fresh=True, expires_delta=expire_token)
+#             refresh = create_refresh_token(generate_token, expires_delta=expire_refresh_token)
+
+#             return jsonify({
+#                 'id' : sql_user.ID,
+#                 'username' : sql_user.username,
+#                 'group' : sql_user.group,
+#                 'token' : access,
+#                 'refresh' : refresh,
+#                 'expire' : str(expire_token)
+#             }), HTTP_200_OK
+
+#     return jsonify({
+#         'msg' : 'Kesalahan pada autentikasi'
+#     }), HTTP_401_UNAUTHORIZED
 
 # user login without flask jwt extended
-@auth.post('user-login')
+@auth.post('/user-login')
 def user_login2():
     username = request.json.get('username')
     password = request.json.get('password')
@@ -184,19 +211,45 @@ def user_login2():
             elif sql_user.group == 'siswa':
                 query_siswa = BaseModel(SiswaModel)
                 sql_siswa = query_siswa.filter_by(user_id=sql_user.ID)
+                
+                if not sql_siswa:
+                    return jsonify({
+                        'msg' : 'Username not full registered'
+                    })
 
                 sql_user.last_login = utc_makassar()
                 query.update_data()
                 
-                data = []
-                data.append({
+                return jsonify({
                     'id' : sql_user.ID,
                     'username' : sql_user.username,
                     'email' : sql_user.email,
                     'group' : sql_user.group,
-                    'nama_siswa' : sql_siswa.nama_siswa
-                })
-
+                    'group' : sql_user.group,
+                    'nama_depan' : sql_siswa.nama_depan,
+                    'nama_belakang' : sql_siswa.nama_belakang,
+                    'jenis_kelamin' : sql_siswa.jenis_kelamin,
+                    'alamat' : sql_siswa.alamat,
+                
+                }), HTTP_200_OK
+                
+            elif sql_user.group == 'guru':
+                query_guru = BaseModel(GuruModel)
+                sql_guru = query_guru.filter_by(user_id=sql_user.ID)
+                if not sql_guru:
+                    return jsonify({
+                        'msg' : 'User not full registered'
+                    }), HTTP_404_NOT_FOUND
+                    
+                sql_user.last_login = utc_makassar()
+                query.update_data()
+                
                 return jsonify({
-                    'data' : data
+                    'id' : sql_user.ID,
+                    'username' : sql_user.username,
+                    'group' : sql_user.group,
+                    'email' : sql_user.email,
+                    'nama_depan' : sql_guru.nama_depan,
+                    'nama_belakang' : sql_guru.nama_belakang,
+                    'jenis_kelamin' : sql_guru.jenis_kelamin
                 }), HTTP_200_OK

@@ -9,7 +9,6 @@ guru = Blueprint('guru', __name__, url_prefix='/guru')
 
 @guru.route('/add-guru', methods=['POST'])
 def tambah_guru():
-
     username = request.json.get('username')
     group = request.json.get('group')
     password = request.json.get('password')

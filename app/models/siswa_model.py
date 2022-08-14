@@ -20,12 +20,14 @@ class SiswaModel(db.Model):
     kelas_id = db.Column(db.Integer, ForeignKey('tb_kelas.kelas_ID'), nullable=True)
 
 
-    def __init__(self, user_id, nama_siswa, nisn, jk, agama) -> None:
+    def __init__(self, user_id, nama_depan, nama_belakang, nisn, jk, agama, alamat=None) -> None:
         self.user_id = user_id
-        self.nama_siswa = nama_siswa
+        self.nama_depan = nama_depan
+        self.nama_belakang = nama_belakang
         self.nisn = nisn
         self.jenis_kelamin = jk
         self.agama = agama
+        self.alamat = alamat
 
 
 

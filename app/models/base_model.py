@@ -4,7 +4,7 @@ class BaseModel:
     def __init__(self, table) -> None:
         self.table = table
 
-    def insert_data(self):
+    def  insert_data(self):
         data = self.table
         db.session.add(data)
         db.session.commit()

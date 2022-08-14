@@ -15,4 +15,22 @@ class GuruModel(db.Model):
     mapel_id = db.Column(db.Integer, ForeignKey('tb_mapel.mapel_ID'), nullable=True)
     kelas_id = db.Column(db.Integer, ForeignKey('tb_kelas.kelas_ID'), nullable=True)
     
+    def __init__(self, user_id, nip, nama_depan, nama_belakang, 
+                 jenis_kelamin, alamat = None, agama = None, mapel_id = None, 
+                 kelas_id = None) -> None:
+        super().__init__()
+        self.user_id = user_id
+        self.nip = nip
+        self.nama_depan = nama_depan    
+        self.nama_belakang = nama_belakang
+        self.jenis_kelamin = jenis_kelamin
+        self.alamat = alamat
+        self.agama = agama
+        self.mapel_id = mapel_id
+        self.kelas_id = kelas_id
+        
     
+    def __repr__(self) -> str:
+        return '(id : {}, nama : {} {}, jenis_kelamin : {})'.format(self.guru_ID,
+                                                                    self.nama_depan, self.nama_depan,
+                                                                    self.jenis_kelamin)   
