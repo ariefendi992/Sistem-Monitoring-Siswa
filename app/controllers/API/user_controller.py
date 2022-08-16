@@ -15,24 +15,17 @@ def register_user():
     username = request.json.get('username')
     group = request.json.get('group')
     password = request.json.get('password')
-    email = request.json.get('email')
 
-    user = BaseModel(UserModel(username, group, password, email))
+    user = BaseModel(UserModel(username, group, password))
 
     check_username = user.filter_by(username=username)
-    check_email = user.filter_by(email=email)
 
     if check_username is not None:
         return jsonify({
             'error' : f'akun dengan username : {username} sudah ada.'
         }), HTTP_409_CONFLICT
-    elif check_email is not None:
-         return jsonify({
-            'error' : f'akun dengan email : {email} sudah ada.'
-        }), HTTP_409_CONFLICT
-         
-    else:
-       
+            
+    else:       
         # user_group = user.table.group
         if 'admin' in group:
             user.insert_data()
@@ -58,7 +51,6 @@ def register_user():
             return jsonify({
                 'ID' : user.table.ID,
                 'username' : user.table.username,
-                'email' : user.table.email,
                 'nama_depan' : user_detail.table.nama_depan,
                 'nama_belakang' : user_detail.table.nama_belakang,
                 'jenis_kelamin' : user_detail.table.jenis_kelamin,
@@ -83,7 +75,6 @@ def register_user():
             return jsonify({
                 'ID' : user.table.ID,
                 'username' : user.table.username,
-                'email' : user.table.email,
                 'nama_depan' : siswa.table.nama_depan,
                 'nama_belakang' : siswa.table.nama_belakang,
                 'nisn' : siswa.table.nisn,
@@ -107,7 +98,6 @@ def register_user():
             return jsonify({
                 'ID' : user.table.ID,
                 'username' : user.table.username,
-                'email' : user.table.email,
                 'nama' : query_guru.table.nama_depan + ' ' +   query_guru.table.nama_belakang,
                 'nip' : query_guru.table.nip
             }), HTTP_201_CREATED  
@@ -177,7 +167,6 @@ def delete_user():
 def update_detail_user():
     username = request.json.get('username')
     group = request.json.get('group')
-    email = request.json.get('email')
     nama_depan = request.json.get('nama_depan')
     nama_belakang = request.json.get('nama_belakang')
     jenis_kelamin = request.json.get('jenis_kelamin')
@@ -190,7 +179,6 @@ def update_detail_user():
     
     user.username = username
     user.group = group
-    user.email = email
 
     users.update_data()
 
@@ -216,7 +204,6 @@ def update_detail_user():
     return jsonify({
         'username' : user.username,
         'group' : user.group,
-        'email' : user.email,
         'nama_lengkap' : user_detail.nama_depan + ' ' + user_detail.nama_belakang,
     }), HTTP_201_CREATED
 
@@ -234,7 +221,6 @@ def fetch_all_user_detail():
         list.append({
             'username' : u1.username,
             'group' : u1.group,
-            'email' : u1.email,
             'nama_depan' : u2.nama_depan if u2.nama_depan else None,
             'nama_depan' : u2.nama_depan,
             'nama_belakang' : u2.nama_belakang,
@@ -260,7 +246,6 @@ def fetch_all_user():
             'id' : u.ID,
             'username' : u.username,
             'group' : u.group,
-            'email' : u.email,
             'last_login' : u.last_login,
             'status_aktif' : 'aktif' if u.active == 1 else 'tidak aktif'
         })

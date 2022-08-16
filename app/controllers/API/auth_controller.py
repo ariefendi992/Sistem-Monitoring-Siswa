@@ -35,7 +35,7 @@ def user_login2():
         
         else:
             print(check_password)
-            if sql_user.group == 'admin':
+            if sql_user.group == 'admin' and sql_user.active == 1:
                 query_user_detail = BaseModel(UserDetailModel)
                 sql_user_detail = query_user_detail.filter_by(user_id=sql_user.ID)
 
@@ -45,7 +45,6 @@ def user_login2():
                 return jsonify({
                     'id' : sql_user.ID,
                     'username' : sql_user.username,
-                    'email' : sql_user.email,
                     'group' : sql_user.group,
                     'nama_depan' : sql_user_detail.nama_depan,
                     'nama_belakang' : sql_user_detail.nama_belakang,
@@ -54,7 +53,7 @@ def user_login2():
                     'telp' : sql_user_detail.telp
                 }), HTTP_200_OK
 
-            elif sql_user.group == 'siswa':
+            elif sql_user.group == 'siswa' and sql_user.active == 1:
                 query_siswa = BaseModel(SiswaModel)
                 sql_siswa = query_siswa.filter_by(user_id=sql_user.ID)
                 
@@ -69,7 +68,6 @@ def user_login2():
                 return jsonify({
                     'id' : sql_user.ID,
                     'username' : sql_user.username,
-                    'email' : sql_user.email,
                     'group' : sql_user.group,
                     'group' : sql_user.group,
                     'nama_depan' : sql_siswa.nama_depan,
@@ -79,7 +77,7 @@ def user_login2():
                 
                 }), HTTP_200_OK
                 
-            elif sql_user.group == 'guru':
+            elif sql_user.group == 'guru' and sql_user.active == 1:
                 query_guru = BaseModel(GuruModel)
                 sql_guru = query_guru.filter_by(user_id=sql_user.ID)
                 if not sql_guru:
@@ -93,18 +91,20 @@ def user_login2():
                     return jsonify({
                         'id' : sql_user.ID,
                         'username' : sql_user.username,
-                        'group' : sql_user.group,
-                        'email' : sql_user.email,
+                        'group' : sql_user.group,                        
                         'nama_depan' : sql_guru.nama_depan,
                         'nama_belakang' : sql_guru.nama_belakang,
                         'jenis_kelamin' : sql_guru.jenis_kelamin
                     }), HTTP_200_OK
                 else:
                     return jsonify({
-                        'msg' : 'Anda tidak memiliki hak akses. Silahkan Hubungi admin.'
+                        'msg' : 'Hanya guru Mapel yang dapat mengakses aplikasi ini.'
                         # 'msg' : 'sorry this application can only be accessed by subject teachers'
                     }), HTTP_401_UNAUTHORIZED
-
+            else:
+                return jsonify({
+                    'msg' : 'Akun sementara tidak dapat di akses. Silahkan kontak admin.'
+                }), HTTP_401_UNAUTHORIZED
 # ------------- user new user details ----------
 # ------------- add new user -------
 # @auth.post('/register-new-user')
@@ -113,21 +113,16 @@ def user_login2():
 #     username = request.json.get('username')
 #     group = request.json.get('group')
 #     password = request.json.get('password')
-#     email = request.json.get('email')
 
-#     user = BaseModel(UserModel(username, group, password, email))
+#     user = BaseModel(UserModel(username, group, password))
 
 #     check_username = user.filter_by(username=username)
-#     check_email = user.filter_by(email=email)
 
 #     if check_username is not None:
 #         return jsonify({
 #             'error' : f'akun dengan username : {username} sudah ada.'
 #         }), HTTP_409_CONFLICT
-#     elif check_email is not None:
-#          return jsonify({
-#             'error' : f'akun dengan email : {email} sudah ada.'
-#         }), HTTP_409_CONFLICT
+#    
 #     else:
        
 #         # user_group = user.table.group
@@ -155,7 +150,6 @@ def user_login2():
 #             return jsonify({
 #                 'ID' : user.table.ID,
 #                 'username' : user.table.username,
-#                 'email' : user.table.email,
 #                 'nama_depan' : user_detail.table.nama_depan,
 #                 'nama_belakang' : user_detail.table.nama_belakang,
 #                 'jenis_kelamin' : user_detail.table.jenis_kelamin,
@@ -179,7 +173,6 @@ def user_login2():
 #             return jsonify({
 #                 'ID' : user.table.ID,
 #                 'username' : user.table.username,
-#                 'email' : user.table.email,
 #                 'nama_depan' : siswa.table.nama_depan,
 #                 'nama_belakang' : siswa.table.nama_belakang,
 #                 'nisn' : siswa.table.nisn,
@@ -203,7 +196,6 @@ def user_login2():
 #             return jsonify({
 #                 'ID' : user.table.ID,
 #                 'username' : user.table.username,
-#                 'email' : user.table.email,
 #                 'nama' : query_guru.table.nama_depan + ' ' +   query_guru.table.nama_belakang,
 #                 'nip' : query_guru.table.nip
 #             }), HTTP_201_CREATED

@@ -23,7 +23,6 @@ def get_one_siswa(id):
     return jsonify({
          'user_id' : sql_user.ID,
         'username' : sql_user.username,
-        'email' : sql_user.email,
         'group' : sql_user.group,
         'group' : sql_user.group,
         'nama_depan' : sql_siswa.nama_depan,

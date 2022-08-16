@@ -12,20 +12,13 @@ def tambah_guru():
     username = request.json.get('username')
     group = request.json.get('group')
     password = request.json.get('password')
-    email = request.json.get('email')
 
-    user = BaseModel(UserModel(username, group, password, email))
+    user = BaseModel(UserModel(username, group, password))
     check_username = user.filter_by(username=username)
-    check_email = user.filter_by(email=email)
 
     if check_username is not None:
         return jsonify({
             'error' : f'akun dengan username : {username} sudah ada.'
-        }), HTTP_409_CONFLICT
-
-    elif check_email is not None:
-        return jsonify({
-            'error' : f'akun dengan email : {email} sudah ada.'
         }), HTTP_409_CONFLICT
 
     else:
@@ -47,7 +40,6 @@ def tambah_guru():
             return jsonify({
                 'ID' : user.table.id,
                 'username' : user.table.username,
-                'email' : user.table.email,
                 'group' : user.table.group,
                 'nama' : guru.table.nama_guru,
                 'jenis_kelamin' : guru.table.jenis_kelamin,

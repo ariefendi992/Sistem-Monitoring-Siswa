@@ -10,17 +10,16 @@ class UserModel(db.Model):
     username = db.Column(db.String(64), nullable=False)
     group = db.Column(db.String(32), nullable=False)
     password = db.Column(db.String(256), nullable=False)
-    email = db.Column(db.String(128), nullable=True)
+    # email = db.Column(db.String(128), nullable=True)
     activation_code = db.Column(db.String(64), nullable=True)
     create_on = db.Column(db.DateTime, default=utc_makassar())
     last_login = db.Column(db.DateTime, onupdate=utc_makassar())
     active = Column(SMALLINT, nullable=True)
 
-    def __init__(self, username, group, password, email) -> None:
+    def __init__(self, username, group, password) -> None:
         self.username = username
         self.group = group
         self.password = bcrypt.generate_password_hash(password)
-        self.email = email
         self.active = 1
         
     def __repr__(self) -> str:
