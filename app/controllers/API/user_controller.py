@@ -7,35 +7,6 @@ from app.lib.status_code import *
 from app.extensions import db
 
 user = Blueprint('user', __name__, url_prefix='/user')
-# 
-# ------------- register user -----------------
-# @user.route('/register-user', methods=['POST'])
-# def register_user():
-#     username = request.json.get('username')
-#     group = request.json.get('group')
-#     password = request.json.get('password')
-#     email = request.json.get('email')
-
-#     users = BaseModel(UserModel(username,group, password, email))
-
-#     check_user = users.filter_by(username=username)
-#     check_email = users.filter_by(email=email)
-
-#     if check_user is not None:
-#         return jsonify({
-#             'error' : f'akun dengan username : {username} sudah ada.'
-#         }), HTTP_409_CONFLICT
-#     elif check_email is not None:
-#          return jsonify({
-#             'error' : f'akun dengan email : {email} sudah ada.'
-#         }), HTTP_409_CONFLICT
-#     else:
-#         users.insert_data()
-#         return jsonify({
-#             'id' : users.table.ID,
-#             'username' : users.table.username,
-#             'email' : users.table.email
-#         }),HTTP_201_CREATED
 
 @user.route('/register-user', methods=['POST'])
 def register_user():
@@ -107,7 +78,7 @@ def register_user():
             agama = request.json.get('agama')
             alamat = request.json.get('alamat')
 
-            siswa = BaseModel(SiswaModel(user_id, nisn, nama_depan, nama_belakang, jk, agama))
+            siswa = BaseModel(SiswaModel(user_id, nama_depan, nama_belakang, nisn, jk, agama))
             siswa.insert_data()
             return jsonify({
                 'ID' : user.table.ID,
@@ -139,8 +110,7 @@ def register_user():
                 'email' : user.table.email,
                 'nama' : query_guru.table.nama_depan + ' ' +   query_guru.table.nama_belakang,
                 'nip' : query_guru.table.nip
-            }), HTTP_201_CREATED
-       
+            }), HTTP_201_CREATED  
 
 
 # 

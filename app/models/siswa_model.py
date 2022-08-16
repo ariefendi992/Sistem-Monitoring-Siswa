@@ -5,7 +5,7 @@ from sqlalchemy.dialects.mysql import INTEGER, VARCHAR
 class SiswaModel(db.Model):
     __tablename__ = 'tb_siswa_detail'
     siswa_ID = Column(INTEGER(unsigned=True), primary_key=True, autoincrement=True)
-    user_id = Column(INTEGER(unsigned=True), ForeignKey('tb_user.ID'), nullable=False)
+    user_id = Column(INTEGER(unsigned=True), ForeignKey('tb_user.ID', onupdate='CASCADE', ondelete='CASCADE'), nullable=False)
     nama_depan = Column(VARCHAR(64), nullable=False)
     nama_belakang = Column(VARCHAR(64), nullable=False)
     nisn = db.Column(db.String(32), nullable=False)
