@@ -11,7 +11,7 @@ class UserModel(db.Model):
     group = db.Column(db.String(32), nullable=False)
     password = db.Column(db.String(256), nullable=False)
     # email = db.Column(db.String(128), nullable=True)
-    activation_code = db.Column(db.String(64), nullable=True)
+    # activation_code = db.Column(db.String(64), nullable=True)
     create_on = db.Column(db.DateTime, default=utc_makassar())
     last_login = db.Column(db.DateTime, onupdate=utc_makassar())
     active = Column(SMALLINT, nullable=True)
