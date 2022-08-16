@@ -8,3 +8,5 @@ PyMySQL==1.0.2
 python-dotenv==0.20.0
 pytz==2022.1
 python-slugify==6.1.2
+qrcode==7.3.1
+Pillow==9.2.0
