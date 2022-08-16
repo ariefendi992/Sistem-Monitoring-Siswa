@@ -18,6 +18,7 @@ class SiswaModel(db.Model):
     nama_ibu = db.Column(db.String(128), nullable=True)
     foto_siswa = db.Column(db.String(256), nullable=True)
     kelas_id = db.Column(db.Integer, ForeignKey('tb_kelas.kelas_ID'), nullable=True)
+    qr_code = db.Column(db.String(256), nullable=True)
 
 
     def __init__(self, user_id, nama_depan, nama_belakang, nisn, jk, agama, alamat=None) -> None:
