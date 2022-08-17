@@ -45,7 +45,7 @@ def get_one_siswa(id):
         query_siswa.update_data()
     
     return jsonify({
-         'user_id' : sql_user.ID,
+        'user_id' : sql_user.ID,
         'username' : sql_user.username,
         'group' : sql_user.group,
         'group' : sql_user.group,
@@ -57,7 +57,7 @@ def get_one_siswa(id):
         'nama_ayah' : sql_siswa.nama_ayah,
         'nama_ibu' : sql_siswa.nama_ibu,
         'foto' : sql_siswa.foto_siswa,
-        'kelas' : sql_kelas.nama_kelas,
+        'kelas' : sql_kelas.nama_kelas if sql_siswa.kelas_id else None,
         'qr_code' : qr_code if file == True else None,
     }), HTTP_200_OK
     
