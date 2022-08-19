@@ -4,7 +4,7 @@ from re import A
 from flask import Blueprint, jsonify, url_for
 from ...lib.status_code import *
 from ...models.user_model import UserModel
-from ...models.sekolah_model import KelasModel
+from ...models.kelas_model import KelasModel
 from ...models.base_model import BaseModel
 from app.models.siswa_model import SiswaModel
 from qrcode.image.styledpil import StyledPilImage

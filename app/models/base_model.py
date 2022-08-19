@@ -19,12 +19,12 @@ class BaseModel:
     def fetch_all(self):
         return self.table.query.all()
 
-    def filter_by(self, *args, **kwargs):
-        return self.table.query.filter_by(*args, **kwargs).first()
+    def filter_by(self, **kwargs):
+        return self.table.query.filter_by(**kwargs).first()
 
-    def fetch_join_all(self, *args, **kwargs):
-        return db.session.query(self.table, *args, **kwargs).join(*args, **kwargs).all()
+    def fetch_join_all(self,**kwargs):
+        return db.session.query(self.table,**kwargs).join(**kwargs).all()
         # return self.table.query.join(*args, **kwargs).all()
 
-    def limit_one(self, *args, **kwargs):
+    def limit_one(self,**kwargs):
         return self.table.query.filter(*args, **kwargs).order_by(**kwargs).limit(1).all()

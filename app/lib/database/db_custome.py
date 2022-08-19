@@ -1,5 +1,4 @@
-from this import d
-from API.extensions import db
+from app.extensions import db
 
 class MyDB:
     def __init__(self, table_name) -> None:
@@ -10,8 +9,8 @@ class MyDB:
         db.session.add(data)
         db.session.commit()
 
-    def filter_by(self, *args, **kwargs):
-        return self.table.query.filter_by(*args, **kwargs).first()
+    def filter_by(self, **kwargs):
+        return self.table.query.filter_by(kwargs).first()
 
     def query_all(self):
         data = self.table.query.all()
