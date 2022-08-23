@@ -231,7 +231,7 @@ def fetch_all_user_detail():
         })
 
     return jsonify({
-        'user_detail:' : list
+        'data:' : list
     }), HTTP_200_OK
     
 # fetch all user

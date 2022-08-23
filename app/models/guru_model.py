@@ -33,4 +33,13 @@ class GuruModel(db.Model):
     def __repr__(self) -> str:
         return '(id : {}, nama : {} {}, jenis_kelamin : {})'.format(self.guru_ID,
                                                                     self.nama_depan, self.nama_depan,
-                                                                    self.jenis_kelamin)   
+                                                                    self.jenis_kelamin)
+        
+class WaliKelas(db.Model):
+    __tablename__ = 'tb_wali_kelas'
+    wali_kelas_ID = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    guru_id = db.Column(db.Integer, nullable=False)
+    kelas_id = db.Column(db.Integer, nullabel=False)
+    
+    def __repr__(self) -> str:
+        return '(id : {}, guru_id : {}, kelas_id : {})'.format(self.wali_kelas_ID, self.guru_id, self.kelas_id)

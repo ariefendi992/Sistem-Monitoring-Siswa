@@ -73,3 +73,4 @@ def delete_mapel(id):
         'msg' : 'Mapel has been deleted'
     }), HTTP_200_OK
     
+# jadwal belajar
