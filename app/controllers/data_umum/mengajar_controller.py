@@ -1,9 +1,17 @@
-# from flask import Blueprint, request, jsonify
 from app.lib.status_code import *
+from app.models.mapel_model import MapelModel
 from app.models.mengajar_model import MengajarModel
 from app.models.base_model import BaseModel
+from app.models.guru_model import GuruModel
+from app.models.kelas_model import KelasModel
+from app.models.semester_model import SemesterModel
+from app.models.tahun_ajaran_model import TahunAjaranModel
 from flask import Blueprint, request, jsonify
+from sqlalchemy import and_
+from app.extensions import db
 import time
+
+from app.models.user_model import UserDetailModel, UserModel
 
 
 mengajar = Blueprint('mengajar', __name__, url_prefix='/mengajar')
@@ -85,3 +93,34 @@ def delete_mengajar(id):
         return jsonify({
             'msg' : 'Failed load data'
         }), HTTP_405_METHOD_NOT_ALLOWED
+        
+# join table without foreign Key
+@mengajar.get('fetch-data')
+def fetch_mengajar():
+    # relasi = db.session.query(MengajarModel).add_entity(GuruModel).join(GuruModel, filter).all()
+    # relasi = base.join_without_fk((GuruModel, MapelModel) , (MengajarModel.guru_id == GuruModel.guru_ID, MengajarModel.mapel_id == MapelModel.mapel_ID))
+    relasi = db.session.query(MengajarModel, GuruModel, MapelModel, KelasModel, SemesterModel, TahunAjaranModel).\
+            join(GuruModel, MengajarModel.guru_id == GuruModel.guru_ID). \
+            join(MapelModel, MengajarModel.mapel_id == MapelModel.mapel_ID). \
+            join(KelasModel, MengajarModel.kelas_id == KelasModel.kelas_ID). \
+            join(SemesterModel, MengajarModel.semester_id == SemesterModel.semester_ID ).\
+            join(TahunAjaranModel, MengajarModel.th_ajaran_id == TahunAjaranModel.tahun_ajaran_ID)
+        
+    print(relasi)
+    data = []
+    for m in relasi:
+        print(m)
+        data.append({
+            'id' : m.MengajarModel.mengajar_ID,
+            'kode_mengajar' : m.MengajarModel.kode_mengajar,
+            'jamke' : m.MengajarModel.jamke,
+            'nama_guru' : m.GuruModel.nama_depan + ' ' + m.GuruModel.nama_belakang,
+            'mapel' : m.MapelModel.mapel.upper(),
+            'kelas' : m.KelasModel.nama_kelas,
+            'semester' : m.SemesterModel.semester.upper() if m.MengajarModel.mengajar_ID == m.SemesterModel.semester_ID else None, 
+            't_ajaran' : m.TahunAjaranModel.tahun_ajaran
+        })      
+        
+    return jsonify({
+        'data' : data
+    }), HTTP_200_OK

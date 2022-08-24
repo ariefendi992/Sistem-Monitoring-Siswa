@@ -32,7 +32,7 @@ class GuruModel(db.Model):
     
     def __repr__(self) -> str:
         return '(id : {}, nama : {} {}, jenis_kelamin : {})'.format(self.guru_ID,
-                                                                    self.nama_depan, self.nama_depan,
+                                                                    self.nama_depan, self.nama_belakang,
                                                                     self.jenis_kelamin)
         
 class WaliKelas(db.Model):
