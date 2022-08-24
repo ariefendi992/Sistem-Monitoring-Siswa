@@ -1,6 +1,5 @@
 from fileinput import filename
 import hashlib
-from re import A
 from flask import Blueprint, jsonify, url_for
 from app.lib.status_code import *
 from ...models.user_model import UserModel
@@ -11,6 +10,13 @@ from qrcode.image.styledpil import StyledPilImage
 from qrcode.image.styles.moduledrawers import HorizontalBarsDrawer
 from qrcode.image.styles.colormasks import SolidFillColorMask
 from werkzeug.utils import secure_filename
+from app.models.mengajar_model import MengajarModel
+from app.models.guru_model import GuruModel
+from app.models.kelas_model import KelasModel
+from app.models.semester_model import SemesterModel
+from app.models.mapel_model import MapelModel
+from app.models.tahun_ajaran_model import TahunAjaranModel
+from app.extensions import db
 import qrcode, os
 
 siswa = Blueprint('siswa', __name__, url_prefix='/siswa')
@@ -90,6 +96,13 @@ def generate_qrcode(id):
         'qr_code' : qr_code 
     }), HTTP_200_OK
     
-
+@siswa.get('/jadwal/<kelas_id>')
+def jadwal_belajar(kelas_id):
+    
+    table = BaseModel(MengajarModel)
+    kelas_id = table.filter_by(kelas_id=kelas_id)
+    
+    if kelas_id:
+        pass
     
     
