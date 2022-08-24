@@ -117,7 +117,7 @@ def fetch_mengajar():
             'nama_guru' : m.GuruModel.nama_depan + ' ' + m.GuruModel.nama_belakang,
             'mapel' : m.MapelModel.mapel.upper(),
             'kelas' : m.KelasModel.nama_kelas,
-            'semester' : m.SemesterModel.semester.upper() if m.MengajarModel.mengajar_ID == m.SemesterModel.semester_ID else None, 
+            'semester' : m.SemesterModel.semester.upper(), 
             't_ajaran' : m.TahunAjaranModel.tahun_ajaran
         })      
         
