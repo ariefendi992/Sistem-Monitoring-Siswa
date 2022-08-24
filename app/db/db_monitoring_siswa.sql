@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 23, 2022 at 04:16 PM
+-- Generation Time: Aug 23, 2022 at 11:53 PM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 7.4.29
 
@@ -36,7 +36,7 @@ CREATE TABLE `alembic_version` (
 --
 
 INSERT INTO `alembic_version` (`version_num`) VALUES
-('24f972fa10a4');
+('b607ca3c922e');
 
 -- --------------------------------------------------------
 
@@ -148,8 +148,18 @@ INSERT INTO `tb_mapel` (`mapel_ID`, `mapel`) VALUES
 --
 -- Table structure for table `tb_mengajar`
 --
--- Error reading structure for table db_monitoring_siswa.tb_mengajar: #1030 - Got error 194 &quot;Tablespace is missing for a table&quot; from storage engine InnoDB
--- Error reading data for table db_monitoring_siswa.tb_mengajar: #1064 - You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'FROM `db_monitoring_siswa`.`tb_mengajar`' at line 1
+
+CREATE TABLE `tb_mengajar` (
+  `mengajar_ID` int(11) NOT NULL,
+  `kode_mengajar` varchar(128) NOT NULL,
+  `hari` varchar(32) NOT NULL,
+  `jamke` varchar(12) NOT NULL,
+  `guru_id` int(11) NOT NULL,
+  `mapel_id` int(11) NOT NULL,
+  `kelas_id` int(11) NOT NULL,
+  `semester_id` int(11) NOT NULL,
+  `th_ajaran_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -162,14 +172,6 @@ CREATE TABLE `tb_semester` (
   `semester` varchar(32) NOT NULL,
   `status` varchar(2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `tb_semester`
---
-
-INSERT INTO `tb_semester` (`semester_ID`, `semester`, `status`) VALUES
-(1, 'ganjil', '1'),
-(2, 'genap', '1');
 
 -- --------------------------------------------------------
 
@@ -274,6 +276,18 @@ CREATE TABLE `tb_user_detail` (
 INSERT INTO `tb_user_detail` (`user_detail_ID`, `user_id`, `nama_depan`, `nama_belakang`, `jenis_kelamin`, `alamat`, `telp`, `profil_picture`) VALUES
 (1, 2, 'Ari2', 'Efendi', 'laki-laki', 'Jl. dr. Leimena', '085253886660', NULL);
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tb_wali_kelas`
+--
+
+CREATE TABLE `tb_wali_kelas` (
+  `wali_kelas_ID` int(11) NOT NULL,
+  `guru_id` int(11) NOT NULL,
+  `kelas_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 --
 -- Indexes for dumped tables
 --
@@ -315,6 +329,12 @@ ALTER TABLE `tb_mapel`
   ADD PRIMARY KEY (`mapel_ID`);
 
 --
+-- Indexes for table `tb_mengajar`
+--
+ALTER TABLE `tb_mengajar`
+  ADD PRIMARY KEY (`mengajar_ID`);
+
+--
 -- Indexes for table `tb_semester`
 --
 ALTER TABLE `tb_semester`
@@ -348,6 +368,12 @@ ALTER TABLE `tb_user_detail`
   ADD KEY `user_id` (`user_id`);
 
 --
+-- Indexes for table `tb_wali_kelas`
+--
+ALTER TABLE `tb_wali_kelas`
+  ADD PRIMARY KEY (`wali_kelas_ID`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -376,10 +402,16 @@ ALTER TABLE `tb_mapel`
   MODIFY `mapel_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
+-- AUTO_INCREMENT for table `tb_mengajar`
+--
+ALTER TABLE `tb_mengajar`
+  MODIFY `mengajar_ID` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `tb_semester`
 --
 ALTER TABLE `tb_semester`
-  MODIFY `semester_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `semester_ID` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `tb_siswa_detail`
@@ -404,6 +436,12 @@ ALTER TABLE `tb_user`
 --
 ALTER TABLE `tb_user_detail`
   MODIFY `user_detail_ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `tb_wali_kelas`
+--
+ALTER TABLE `tb_wali_kelas`
+  MODIFY `wali_kelas_ID` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- Constraints for dumped tables

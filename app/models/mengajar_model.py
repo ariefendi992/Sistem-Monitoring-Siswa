@@ -1,5 +1,4 @@
 from app.extensions import db
-import time
 class MengajarModel(db.Model):
     __tablename__ = 'tb_mengajar'
     mengajar_ID = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -13,8 +12,8 @@ class MengajarModel(db.Model):
     th_ajaran_id = db.Column(db.Integer, nullable=False)
     
     
-    def __init__(self, hari, jamke, guru_id, mapel_id, kelas_id, sms_id, ta_id) -> None:
-        self.kode_mengajar = 'MPL-'+str(time.time()).rsplit('.',1)[1]
+    def __init__(self, kd_menghajar, hari, jamke, guru_id, mapel_id, kelas_id, sms_id, ta_id) -> None:
+        self.kode_mengajar = kd_menghajar
         self.hari = hari
         self.jamke = jamke
         self.guru_id = guru_id
