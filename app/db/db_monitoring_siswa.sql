@@ -2,9 +2,9 @@
 -- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Aug 25, 2022 at 01:57 PM
--- Server version: 10.4.24-MariaDB
+-- Host: localhost
+-- Generation Time: Aug 25, 2022 at 06:53 PM
+-- Server version: 10.4.21-MariaDB
 -- PHP Version: 7.4.29
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -168,8 +168,8 @@ CREATE TABLE `tb_mengajar` (
 --
 
 INSERT INTO `tb_mengajar` (`mengajar_ID`, `kode_mengajar`, `hari`, `guru_id`, `mapel_id`, `kelas_id`, `semester_id`, `th_ajaran_id`, `mulai`, `selesai`) VALUES
-(1, 'MPL-533657', 'kamis', 1, 1, 2, 1, 1, '', ''),
-(3, 'MPL-3356578', 'kamis', 2, 3, 3, 1, 1, '', '');
+(1, 'MPL-533657', 'sabtu', 1, 1, 2, 1, 1, '', ''),
+(3, 'MPL-3356578', 'sabtu', 2, 3, 3, 1, 1, '', '');
 
 -- --------------------------------------------------------
 
@@ -268,7 +268,7 @@ INSERT INTO `tb_user` (`ID`, `username`, `group`, `password`, `create_on`, `last
 (8, '0852', 'siswa', '$2b$12$MiLByG892gyNAhIzEYf3eOJAzXpoPH9Fs61Q7cZFKqkB2DFwIoxPu', '2022-08-10 17:53:06', '2022-08-14 23:34:49', 1),
 (10, '10111213', 'guru', '$2b$12$2CeqshCzVo/shsVBD6Nq7uEZthoxNbEiihxEoLY8tdSHVVwqi7DT6', '2022-08-14 22:46:32', '2022-08-15 02:10:24', 1),
 (15, '123456', 'siswa', '$2b$12$OTXeIobl4jEvSiH/Sbxdm.6hINTz2nOve39eI7yU/N/dbFapKmT02', '2022-08-15 02:22:53', '2022-08-17 07:57:07', 1),
-(17, '02468', 'siswa', '$2b$12$cW0cJjOMrr.oFmGWvAjr0ealQU46vNQ8Q171BNOK33AcW/TrAfg/O', '2022-08-17 07:56:30', '2022-08-25 10:51:02', 1),
+(17, '02468', 'siswa', '$2b$12$cW0cJjOMrr.oFmGWvAjr0ealQU46vNQ8Q171BNOK33AcW/TrAfg/O', '2022-08-17 07:56:30', '2022-08-25 22:23:23', 1),
 (18, '19970821', 'guru', '$2b$12$dQ9o3Ko9eTWA1c/on.RdyevQLg1Lelzhl7lXD7TrH9OsbIdV0SxZe', '2022-08-24 09:44:47', NULL, 1);
 
 -- --------------------------------------------------------
