@@ -149,7 +149,7 @@ def jadwal_belajar(kelas_id):
             
         return jsonify({
             'data' : {
-                'today' : today,
+                'today' : today if today else 'Hari Libur',
                 'tomorrow' : tomorrow if tomorrow else 'Hari Libur'
             }
         }), HTTP_200_OK
