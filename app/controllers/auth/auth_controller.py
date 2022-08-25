@@ -50,7 +50,7 @@ def user_login2():
                     'nama_belakang' : sql_user_detail.nama_belakang,
                     'jenis_kelamin' : sql_user_detail.jenis_kelamin,
                     'alamat' : sql_user_detail.alamat,
-                    'telp' : sql_user_detail.telp
+                    'telp' : sql_user_detail.telp,
                 }), HTTP_200_OK
 
             elif sql_user.group == 'siswa' and sql_user.active == 1:
@@ -74,6 +74,7 @@ def user_login2():
                     'nama_belakang' : sql_siswa.nama_belakang,
                     'jenis_kelamin' : sql_siswa.jenis_kelamin,
                     'alamat' : sql_siswa.alamat,
+                    'kelas_id' : sql_siswa.kelas_id,
                 
                 }), HTTP_200_OK
                 

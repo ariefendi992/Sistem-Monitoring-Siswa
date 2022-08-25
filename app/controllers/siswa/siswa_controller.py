@@ -17,6 +17,7 @@ from app.models.semester_model import SemesterModel
 from app.models.mapel_model import MapelModel
 from app.models.tahun_ajaran_model import TahunAjaranModel
 from app.extensions import db
+from app.lib.custome.week_days import *
 import qrcode, os
 
 siswa = Blueprint('siswa', __name__, url_prefix='/siswa')
@@ -55,6 +56,7 @@ def get_one_siswa(id):
         'username' : sql_user.username,
         'group' : sql_user.group,
         'group' : sql_user.group,
+        'nisn' : sql_siswa.nisn,
         'nama_depan' : sql_siswa.nama_depan,
         'nama_belakang' : sql_siswa.nama_belakang,
         'jenis_kelamin' : sql_siswa.jenis_kelamin,
@@ -102,7 +104,57 @@ def jadwal_belajar(kelas_id):
     table = BaseModel(MengajarModel)
     kelas_id = table.filter_by(kelas_id=kelas_id)
     
-    if kelas_id:
-        pass
+    if kelas_id:        
+        # today_sql = table.fetch_all()
+        today = []
+        
+        today_sql = db.session.query(MengajarModel, GuruModel, MapelModel, KelasModel)\
+            .join(GuruModel, MengajarModel.guru_id == GuruModel.guru_ID)\
+            .join(MapelModel, MengajarModel.mapel_id == MapelModel.mapel_ID)\
+            .join(KelasModel, MengajarModel.kelas_id == KelasModel.kelas_ID)\
+            .filter(MengajarModel.hari == today_())
+                
+                
+        
+        for m in today_sql:
+                today.append({
+                'id' : m.MengajarModel.mengajar_ID,
+                'nama_guru' : m.GuruModel.nama_depan.capitalize() + ' ' + m.GuruModel.nama_belakang.capitalize(),
+                'hari' : m.MengajarModel.hari.capitalize(),
+                'kelas' : m.KelasModel.nama_kelas,
+                'jam_mulai' : m.MengajarModel.mulai,
+                'jam_selesai' : m.MengajarModel.selesai,
+                'mapel' : m.MapelModel.mapel.upper()
+            })
+            
     
-    
+        tomorrow_sql = db.session.query(MengajarModel, GuruModel, MapelModel, KelasModel)\
+            .join(GuruModel, MengajarModel.guru_id == GuruModel.guru_ID)\
+            .join(MapelModel, MengajarModel.mapel_id == MapelModel.mapel_ID)\
+            .join(KelasModel, MengajarModel.kelas_id == KelasModel.kelas_ID)\
+            .filter(MengajarModel.hari == tomorrow_())
+                
+        tomorrow = []      
+        
+        for m in tomorrow_sql:
+                tomorrow.append({
+                'id' : m.MengajarModel.mengajar_ID,
+                'nama_guru' : m.GuruModel.nama_depan.capitalize() + ' ' + m.GuruModel.nama_belakang.capitalize(),
+                'hari' : m.MengajarModel.hari.capitalize(),
+                'kelas' : m.KelasModel.nama_kelas,                
+                'jam_mulai' : m.MengajarModel.mulai,
+                'jam_selesai' : m.MengajarModel.selesai,
+                'mapel' : m.MapelModel.mapel.upper()
+            })
+            
+        return jsonify({
+            'data' : {
+                'today' : today,
+                'tomorrow' : tomorrow if tomorrow else 'Hari Libur'
+            }
+        }), HTTP_200_OK
+        
+    else:
+        return jsonify({
+            'msg' : 'Belum ada jadwal.'
+        })
