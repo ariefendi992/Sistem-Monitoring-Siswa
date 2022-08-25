@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 23, 2022 at 11:53 PM
+-- Generation Time: Aug 25, 2022 at 01:57 PM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 7.4.29
 
@@ -36,7 +36,7 @@ CREATE TABLE `alembic_version` (
 --
 
 INSERT INTO `alembic_version` (`version_num`) VALUES
-('b607ca3c922e');
+('7ce4954c2d18');
 
 -- --------------------------------------------------------
 
@@ -62,7 +62,8 @@ CREATE TABLE `tb_guru_detail` (
 --
 
 INSERT INTO `tb_guru_detail` (`guru_ID`, `user_id`, `nip`, `nama_depan`, `nama_belakang`, `jenis_kelamin`, `alamat`, `agama`, `mapel_id`, `kelas_id`) VALUES
-(1, 10, '10111213', 'Abang', 'Icha', 'laki-laki', 'Jl. dr. Leimena', 'islam', NULL, NULL);
+(1, 10, '10111213', 'Abang', 'Icha', 'laki-laki', 'Jl. dr. Leimena', 'islam', NULL, NULL),
+(2, 18, '10111213', 'Abang', 'Icha2', 'perempuan', 'Jl. dr. Leimena', 'islam', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -153,13 +154,22 @@ CREATE TABLE `tb_mengajar` (
   `mengajar_ID` int(11) NOT NULL,
   `kode_mengajar` varchar(128) NOT NULL,
   `hari` varchar(32) NOT NULL,
-  `jamke` varchar(12) NOT NULL,
   `guru_id` int(11) NOT NULL,
   `mapel_id` int(11) NOT NULL,
   `kelas_id` int(11) NOT NULL,
   `semester_id` int(11) NOT NULL,
-  `th_ajaran_id` int(11) NOT NULL
+  `th_ajaran_id` int(11) NOT NULL,
+  `mulai` varchar(12) NOT NULL,
+  `selesai` varchar(12) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `tb_mengajar`
+--
+
+INSERT INTO `tb_mengajar` (`mengajar_ID`, `kode_mengajar`, `hari`, `guru_id`, `mapel_id`, `kelas_id`, `semester_id`, `th_ajaran_id`, `mulai`, `selesai`) VALUES
+(1, 'MPL-533657', 'kamis', 1, 1, 2, 1, 1, '', ''),
+(3, 'MPL-3356578', 'kamis', 2, 3, 3, 1, 1, '', '');
 
 -- --------------------------------------------------------
 
@@ -172,6 +182,14 @@ CREATE TABLE `tb_semester` (
   `semester` varchar(32) NOT NULL,
   `status` varchar(2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `tb_semester`
+--
+
+INSERT INTO `tb_semester` (`semester_ID`, `semester`, `status`) VALUES
+(1, 'ganjil', '1'),
+(2, 'genap', '1');
 
 -- --------------------------------------------------------
 
@@ -203,7 +221,7 @@ CREATE TABLE `tb_siswa_detail` (
 
 INSERT INTO `tb_siswa_detail` (`siswa_ID`, `user_id`, `nama_depan`, `nama_belakang`, `nisn`, `tempat_lahir`, `tanggal_lahir`, `jenis_kelamin`, `agama`, `alamat`, `nama_ayah`, `nama_ibu`, `foto_siswa`, `kelas_id`, `qr_code`) VALUES
 (2, 15, 'Dahlan', 'Al Ghazaly', '123456', NULL, NULL, 'pria', 'islam', NULL, NULL, NULL, NULL, 1, 'Dahlan_e10adc3949ba59abbe56e057f20f883e.png'),
-(3, 17, 'Nancy', 'Momoland', '02468', NULL, NULL, 'wanita', 'islam', NULL, NULL, NULL, NULL, NULL, 'Nancy_8f562a872c4a1ee488c27a3c40215e57.png');
+(3, 17, 'Nancy', 'Momoland', '02468', NULL, NULL, 'wanita', 'islam', NULL, NULL, NULL, NULL, 3, 'Nancy_8f562a872c4a1ee488c27a3c40215e57.png');
 
 -- --------------------------------------------------------
 
@@ -250,7 +268,8 @@ INSERT INTO `tb_user` (`ID`, `username`, `group`, `password`, `create_on`, `last
 (8, '0852', 'siswa', '$2b$12$MiLByG892gyNAhIzEYf3eOJAzXpoPH9Fs61Q7cZFKqkB2DFwIoxPu', '2022-08-10 17:53:06', '2022-08-14 23:34:49', 1),
 (10, '10111213', 'guru', '$2b$12$2CeqshCzVo/shsVBD6Nq7uEZthoxNbEiihxEoLY8tdSHVVwqi7DT6', '2022-08-14 22:46:32', '2022-08-15 02:10:24', 1),
 (15, '123456', 'siswa', '$2b$12$OTXeIobl4jEvSiH/Sbxdm.6hINTz2nOve39eI7yU/N/dbFapKmT02', '2022-08-15 02:22:53', '2022-08-17 07:57:07', 1),
-(17, '02468', 'siswa', '$2b$12$cW0cJjOMrr.oFmGWvAjr0ealQU46vNQ8Q171BNOK33AcW/TrAfg/O', '2022-08-17 07:56:30', '2022-08-19 11:22:59', 1);
+(17, '02468', 'siswa', '$2b$12$cW0cJjOMrr.oFmGWvAjr0ealQU46vNQ8Q171BNOK33AcW/TrAfg/O', '2022-08-17 07:56:30', '2022-08-25 10:51:02', 1),
+(18, '19970821', 'guru', '$2b$12$dQ9o3Ko9eTWA1c/on.RdyevQLg1Lelzhl7lXD7TrH9OsbIdV0SxZe', '2022-08-24 09:44:47', NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -381,7 +400,7 @@ ALTER TABLE `tb_wali_kelas`
 -- AUTO_INCREMENT for table `tb_guru_detail`
 --
 ALTER TABLE `tb_guru_detail`
-  MODIFY `guru_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `guru_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `tb_jadwal_belajar`
@@ -405,13 +424,13 @@ ALTER TABLE `tb_mapel`
 -- AUTO_INCREMENT for table `tb_mengajar`
 --
 ALTER TABLE `tb_mengajar`
-  MODIFY `mengajar_ID` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `mengajar_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `tb_semester`
 --
 ALTER TABLE `tb_semester`
-  MODIFY `semester_ID` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `semester_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `tb_siswa_detail`
@@ -429,7 +448,7 @@ ALTER TABLE `tb_tahun_ajaran`
 -- AUTO_INCREMENT for table `tb_user`
 --
 ALTER TABLE `tb_user`
-  MODIFY `ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `tb_user_detail`
