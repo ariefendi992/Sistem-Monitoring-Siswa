@@ -1,6 +1,10 @@
+import datetime
 from fileinput import filename
 import hashlib
+import http
+from operator import and_
 from flask import Blueprint, jsonify, url_for
+from app.lib.custome.time_zone import todayAt
 from app.lib.status_code import *
 from ...models.user_model import UserModel
 from ...models.kelas_model import KelasModel
@@ -8,15 +12,13 @@ from ...models.base_model import BaseModel
 from app.models.siswa_model import SiswaModel
 from qrcode.image.styledpil import StyledPilImage
 from qrcode.image.styles.moduledrawers import HorizontalBarsDrawer
-from qrcode.image.styles.colormasks import SolidFillColorMask
 from werkzeug.utils import secure_filename
 from app.models.mengajar_model import MengajarModel
 from app.models.guru_model import GuruModel
 from app.models.kelas_model import KelasModel
-from app.models.semester_model import SemesterModel
 from app.models.mapel_model import MapelModel
-from app.models.tahun_ajaran_model import TahunAjaranModel
 from app.extensions import db
+from sqlalchemy import and_
 from app.lib.custome.week_days import *
 import qrcode, os
 
@@ -112,9 +114,9 @@ def jadwal_belajar(kelas_id):
             .join(GuruModel, MengajarModel.guru_id == GuruModel.guru_ID)\
             .join(MapelModel, MengajarModel.mapel_id == MapelModel.mapel_ID)\
             .join(KelasModel, MengajarModel.kelas_id == KelasModel.kelas_ID)\
-            .filter(MengajarModel.hari == today_())
+            .filter(MengajarModel.hari == today_()).all()
                 
-                
+        print('today =',today_sql)        
         
         for m in today_sql:
                 today.append({
@@ -132,7 +134,7 @@ def jadwal_belajar(kelas_id):
             .join(GuruModel, MengajarModel.guru_id == GuruModel.guru_ID)\
             .join(MapelModel, MengajarModel.mapel_id == MapelModel.mapel_ID)\
             .join(KelasModel, MengajarModel.kelas_id == KelasModel.kelas_ID)\
-            .filter(MengajarModel.hari == tomorrow_())
+            .filter(MengajarModel.hari == tomorrow_()).all()
                 
         tomorrow = []      
         
@@ -158,3 +160,66 @@ def jadwal_belajar(kelas_id):
         return jsonify({
             'msg' : 'Belum ada jadwal.'
         })
+
+@siswa.get('/one-mapel/<kelas_id>')
+def get_one_mapel(kelas_id):
+    table = BaseModel(MengajarModel)
+    
+    sql_jadwal = table.filter_by(kelas_id=kelas_id)
+    
+    if sql_jadwal:        
+        now = datetime.datetime.now()
+        hours_to_str =datetime.datetime.strftime(now, "%H:%M")
+        day = day_now_indo()
+        day_indo = day[0] +', '+str(day[1]) + ' ' + day[2] + ' ' + str(day[3])
+        
+        sql_jadwal_now = db.session.query(MengajarModel, MapelModel, GuruModel).\
+            join(MapelModel, MengajarModel.mapel_id == MapelModel.mapel_ID).\
+            join(GuruModel, MengajarModel.guru_id == GuruModel.guru_ID).\
+                filter(and_(MengajarModel.mulai <=hours_to_str,
+                            MengajarModel.selesai >=hours_to_str, 
+                            MengajarModel.hari == day[0].lower())).first()
+        
+        print(sql_jadwal_now)
+        if sql_jadwal_now is not None:
+            
+            print(sql_jadwal_now.MapelModel.mapel)
+        
+            data = []
+            data.append({
+                'id' : sql_jadwal_now.MengajarModel.mengajar_ID,
+                'mapel' : sql_jadwal_now.MapelModel.mapel.upper(),
+                'guru' : sql_jadwal_now.GuruModel.nama_depan.capitalize() + ' ' +  sql_jadwal_now.GuruModel.nama_belakang.capitalize(),
+                'mulai' : sql_jadwal_now.MengajarModel.mulai,
+                'selesai' : sql_jadwal_now.MengajarModel.selesai,
+                'date' : day_indo
+            })
+            
+            return jsonify({
+                'data' : data
+                }), HTTP_200_OK
+        else:
+            day = day_now_indo()
+            return jsonify({
+                'data' : day[0] +', '+str(day[1]) + ' ' + day[2] + ' ' + str(day[3])
+            }),HTTP_404_NOT_FOUND
+        
+    else:
+        return jsonify({
+            'error' : 'Data not found'
+        }), HTTP_404_NOT_FOUND
+    
+    # if sql_jadwal_now.mulai is not None:
+    #     convert_str_to_hours = datetime.datetime.strptime(sql_jadwal_now.mulai, '%H:%M')
+    #     hours_now = datetime.datetime.now()
+    #     if hours_now >= todayAt(convert_str_to_hours.hour, convert_str_to_hours.minute):
+    #         return jsonify({
+    #             'id' : sql_jadwal_now.mengajar_ID
+    #         }), HTTP_200_OK
+    
+    # else:
+    #     return jsonify({
+    #         'msg' : 'Jam Mulai masih kosong'
+    #     }), HTTP_404_NOT_FOUND
+            
+   
