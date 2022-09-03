@@ -64,8 +64,6 @@ def get_one_siswa(id):
         'jenis_kelamin' : sql_siswa.jenis_kelamin,
         'agama' : sql_siswa.agama,
         'alamat' : sql_siswa.alamat,
-        'nama_ayah' : sql_siswa.nama_ayah,
-        'nama_ibu' : sql_siswa.nama_ibu,
         'foto' : sql_siswa.foto_siswa,
         'kelas' : sql_kelas.nama_kelas if sql_siswa.kelas_id else None,
         'qr_code' : qr_code if file == True else None,
@@ -196,7 +194,13 @@ def get_one_mapel(kelas_id):
             })
             
             return jsonify({
-                'data' : data
+                # 'data' : data
+                'id' : sql_jadwal_now.MengajarModel.mengajar_ID,
+                'mapel' : sql_jadwal_now.MapelModel.mapel.upper(),
+                'nama_guru' : sql_jadwal_now.GuruModel.nama_depan.capitalize() + ' ' +  sql_jadwal_now.GuruModel.nama_belakang.capitalize(),
+                'jam_mulai' : sql_jadwal_now.MengajarModel.mulai,
+                'jam_selesai' : sql_jadwal_now.MengajarModel.selesai,
+                'hari' : day_indo
                 }), HTTP_200_OK
         else:
             day = day_now_indo()

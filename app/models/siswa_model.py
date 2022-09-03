@@ -14,8 +14,6 @@ class SiswaModel(db.Model):
     jenis_kelamin = db.Column(db.String(32), nullable=False)
     agama = db.Column(db.String(32), nullable=False)
     alamat = db.Column(db.String(256), nullable=True)
-    nama_ayah = db.Column(db.String(128), nullable=True)
-    nama_ibu = db.Column(db.String(128), nullable=True)
     foto_siswa = db.Column(db.String(256), nullable=True)
     kelas_id = db.Column(db.Integer, ForeignKey('tb_kelas.kelas_ID'), nullable=True)
     qr_code = db.Column(db.String(256), nullable=True)
