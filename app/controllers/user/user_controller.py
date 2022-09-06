@@ -78,16 +78,21 @@ def register_user():
             kelas = BaseModel(KelasModel)
             sql_kelas = kelas.filter_by(kelas_ID=kelas_id)
             print(sql_kelas)
-            siswa.insert_data()
+            siswa.insert_data()            
             
-            
-            siswa_count = db.session.query(func.count(SiswaModel.kelas_id)).filter(SiswaModel.kelas_id==kelas_id).scalar()
-            
-            print('jumlah siswa == ',siswa_count)
-            
-            sql_kelas.jml_siswa = siswa_count
-            
+            siswa_count_gender = db.session.query(func.count(SiswaModel.kelas_id)).filter(SiswaModel.kelas_id==kelas_id).filter(SiswaModel.jenis_kelamin==jk).scalar()
+            siswa_count_all = db.session.query(func.count(SiswaModel.kelas_id)).filter(SiswaModel.kelas_id==kelas_id).scalar()
+            if siswa.table.jenis_kelamin == 'laki-laki':
+                sql_kelas.jml_laki = siswa_count_gender
+                # sql_kelas.jml_siswa = str(siswa_total)            
+                # kelas.update_data()
+            elif siswa.table.jenis_kelamin == 'perempuan':
+                sql_kelas.jml_perempuan = siswa_count_gender
+                # sql_kelas.jml_siswa = str(siswa_total)            
+                # kelas.update_data()
+            sql_kelas.jml_siswa = siswa_count_all            
             kelas.update_data()
+
                 
             
             return jsonify({

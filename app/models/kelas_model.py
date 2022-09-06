@@ -5,6 +5,9 @@ class KelasModel(db.Model):
     kelas_ID = db.Column(db.Integer, primary_key=True, autoincrement=True)
     nama_kelas = db.Column(db.String(128), nullable=False)
     jml_siswa = db.Column(db.String(16), nullable=True)
+    jml_laki = db.Column(db.String(16), nullable=True)
+    jml_perempuan = db.Column(db.String(16), nullable=True)
+    
     
     def __init__(self, nama_kelas, jml_siswa = None) -> None:
         super().__init__()
