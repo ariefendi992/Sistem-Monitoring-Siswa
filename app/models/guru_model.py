@@ -9,13 +9,14 @@ class GuruModel(db.Model):
     nip = db.Column(db.String(32), nullable=False)
     nama_depan = db.Column(db.String(128), nullable=False)
     nama_belakang = db.Column(db.String(128), nullable=False)
+    titel = db.Column(db.String(32), nullable=True)
     jenis_kelamin = db.Column(db.String(64), nullable=False)
     alamat = db.Column(db.String(256), nullable=True)
     agama = db.Column(db.String(32), nullable=True)
     mapel_id = db.Column(db.Integer, ForeignKey('tb_mapel.mapel_ID'), nullable=True)
     kelas_id = db.Column(db.Integer, ForeignKey('tb_kelas.kelas_ID'), nullable=True)
     
-    def __init__(self, user_id, nip, nama_depan, nama_belakang, 
+    def __init__(self, user_id, nip, nama_depan, nama_belakang, titel, 
                  jenis_kelamin, alamat = None, agama = None, mapel_id = None, 
                  kelas_id = None) -> None: 
         super().__init__()
@@ -23,6 +24,7 @@ class GuruModel(db.Model):
         self.nip = nip
         self.nama_depan = nama_depan    
         self.nama_belakang = nama_belakang
+        self.titel = titel
         self.jenis_kelamin = jenis_kelamin
         self.alamat = alamat
         self.agama = agama

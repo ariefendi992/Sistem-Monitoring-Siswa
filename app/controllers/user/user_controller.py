@@ -84,12 +84,9 @@ def register_user():
             siswa_count_all = db.session.query(func.count(SiswaModel.kelas_id)).filter(SiswaModel.kelas_id==kelas_id).scalar()
             if siswa.table.jenis_kelamin == 'laki-laki':
                 sql_kelas.jml_laki = siswa_count_gender
-                # sql_kelas.jml_siswa = str(siswa_total)            
-                # kelas.update_data()
             elif siswa.table.jenis_kelamin == 'perempuan':
                 sql_kelas.jml_perempuan = siswa_count_gender
-                # sql_kelas.jml_siswa = str(siswa_total)            
-                # kelas.update_data()
+
             sql_kelas.jml_siswa = siswa_count_all            
             kelas.update_data()
 
