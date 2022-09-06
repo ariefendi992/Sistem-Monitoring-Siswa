@@ -1,14 +1,16 @@
 from flask import Blueprint, jsonify, request
 from app.models.guru_model import GuruModel
+from app.models.kelas_model import KelasModel
 from app.models.siswa_model import SiswaModel
 from app.models.user_model import UserModel, UserDetailModel
 from app.models.base_model import BaseModel
 from app.lib.status_code import *
 from app.extensions import db
+from sqlalchemy import func
 
 user = Blueprint('user', __name__, url_prefix='/user')
 
-@user.route('/register-user', methods=['POST'])
+@user.route('/register-user', methods=['POST','PUT','PATCH'])
 def register_user():
 
     # ========== Data Akun ==============
@@ -65,26 +67,41 @@ def register_user():
 
             nama_depan = request.json.get('nama_depan')
             nama_belakang = request.json.get('nama_belakang')
-            nisn = request.json.get('nisn')
+            nisn = user.table.username
             jk = request.json.get('jenis_kelamin')
             agama = request.json.get('agama')
             alamat = request.json.get('alamat')
+            kelas_id = request.json.get('kelas_id')
+            
 
-            siswa = BaseModel(SiswaModel(user_id, nama_depan, nama_belakang, nisn, jk, agama))
+            siswa = BaseModel(SiswaModel(user_id, nama_depan, nama_belakang, nisn, jk, agama, alamat, kelas_id))
+            kelas = BaseModel(KelasModel)
+            sql_kelas = kelas.filter_by(kelas_ID=kelas_id)
+            print(sql_kelas)
             siswa.insert_data()
+            
+            
+            siswa_count = db.session.query(func.count(SiswaModel.kelas_id)).filter(SiswaModel.kelas_id==kelas_id).scalar()
+            
+            print('jumlah siswa == ',siswa_count)
+            
+            sql_kelas.jml_siswa = siswa_count
+            
+            kelas.update_data()
+                
+            
             return jsonify({
                 'ID' : user.table.ID,
                 'username' : user.table.username,
                 'nama_depan' : siswa.table.nama_depan,
                 'nama_belakang' : siswa.table.nama_belakang,
                 'nisn' : siswa.table.nisn,
-                'jk' : siswa.table.jenis_kelamin,
             }), HTTP_201_CREATED
             
         elif 'guru':
             user.insert_data()
             user_id = user.table.ID
-            nip = request.json.get('nip')
+            nip = user.table.username
             nama_depan = request.json.get('nama_depan')
             nama_belakang = request.json.get('nama_belakang')
             jenis_kelamin = request.json.get('jenis_kelamin')

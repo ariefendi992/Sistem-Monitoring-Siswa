@@ -78,7 +78,7 @@ def user_login2():
                 
                 }), HTTP_200_OK
                 
-            elif sql_user.group == 'guru' and sql_user.active == '1':
+            elif sql_user.group == 'guru' and sql_user.active == 1:
                 query_guru = BaseModel(GuruModel)
                 sql_guru = query_guru.filter_by(user_id=sql_user.ID)
                 if not sql_guru:

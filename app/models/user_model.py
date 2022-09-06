@@ -20,7 +20,7 @@ class UserModel(db.Model):
         self.username = username
         self.group = group
         self.password = bcrypt.generate_password_hash(password)
-        self.active = 1
+        self.active = 0
         
     def __repr__(self) -> str:
         return '[(id: {}, username: {})]'.format(self.ID, self.username)
